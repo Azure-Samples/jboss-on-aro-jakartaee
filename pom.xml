@@ -15,6 +15,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jakarta.jakartaee-api.version>8.0.0</jakarta.jakartaee-api.version>
+        <microprofile.microprofile-health-api>3.0</microprofile.microprofile-health-api>
+
+        <version.server.bootable-jar>3.0.0.GA-redhat-00004</version.server.bootable-jar>
+        <version.wildfly-jar.maven.plugin>4.0.3.Final-redhat-00001</version.wildfly-jar.maven.plugin>
+        <version.eap-datasources-galleon-pack>7.4.0.GA-redhat-00003</version.eap-datasources-galleon-pack>
+
+        <maven.redhat.repository.url>https://maven.repository.redhat.com/ga/</maven.redhat.repository.url>
     </properties>
 
     <dependencies>
@@ -24,9 +31,59 @@
             <version>${jakarta.jakartaee-api.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile.health</groupId>
+            <artifactId>microprofile-health-api</artifactId>
+            <version>${microprofile.microprofile-health-api}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-jar-maven-plugin</artifactId>
+                <version>${version.wildfly-jar.maven.plugin}</version>
+                <configuration>
+                    <feature-packs>
+                        <feature-pack>
+                            <groupId>org.jboss.eap</groupId>
+                            <artifactId>wildfly-galleon-pack</artifactId>
+                            <version>${version.server.bootable-jar}</version>
+                        </feature-pack>
+                        <feature-pack>
+                            <groupId>org.jboss.eap</groupId>
+                            <artifactId>eap-datasources-galleon-pack</artifactId>
+                            <version>${version.eap-datasources-galleon-pack}</version>
+                        </feature-pack>
+                    </feature-packs>
+                    <layers>
+                        <layer>cloud-server</layer>
+                        <layer>web-clustering</layer>
+                        <layer>microprofile-platform</layer>
+                        <layer>mssqlserver-datasource</layer>
+                        <layer>jsf</layer>
+                        <layer>ejb-lite</layer>
+                    </layers>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jboss-enterprise-maven-repository</id>
+            <name>JBoss Enterprise Maven Repository</name>
+            <url>${maven.redhat.repository.url}</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
