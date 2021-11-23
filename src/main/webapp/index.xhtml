@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"/>
+    <title>ToDo List Application</title>
+</h:head>
+<h:body>
+    <div class="container">
+        <h:form>
+            <h1>ToDo Application</h1>
+            <div class="row">
+                <div class="col">
+                    <div class="table-responsive-sm">
+                        <h:dataTable id="todo_list_tb" value="#{toDoView.todos}" border="1" var="row" styleClass="table table-striped table-hover" headerClass="table-dark" columnClasses="col-md-1, col-md-9, col-md-1, col-md-1">
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="ID"/>
+                                </f:facet>
+                                <h:outputText value="#{row.id}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Title"/>
+                                </f:facet>
+                                <h:outputText value="#{row.title}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Completed"/>
+                                </f:facet>
+                                <h:selectBooleanCheckbox id="done" value="#{row.completed}">
+                                    <f:ajax render="@form" listener="#{toDoView.markCompleted(row)}"/>
+                                </h:selectBooleanCheckbox>
+                            </h:column>
+                            <h:column>
+                                <h:commandButton id="delete" value="Delete" action="#{toDoView.delete(row)}" styleClass="btn-secondary btn-sm" type="button">
+                                    <f:ajax render="@form"/>
+                                </h:commandButton>
+                            </h:column>
+                        </h:dataTable>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            Add New
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <h:outputLabel value="Title" styleClass="col-sm-1 col-form-label" for="title_txt"/>
+                                <div class="col-sm-4">
+                                    <h:inputText id="title_txt" value="#{toDoView.todo.title}" styleClass="form-control" maxlength="255" required="true"/>
+                                </div>
+                                <div class="col-sm-1">
+                                    <h:commandButton type="submit" value="create" action="#{toDoView.create}" styleClass="btn btn-primary">
+                                        <f:ajax execute="@form" render="@form"/>
+                                    </h:commandButton>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="card">
+                        <div class="card-header">
+                            Filter
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <h:selectOneMenu value="#{toDoView.filter}" styleClass="form-select">
+                                    <f:selectItem itemValue="All" itemLabel="All"/>
+                                    <f:selectItem itemValue="Pending" itemLabel="Pending"/>
+                                    <f:selectItem itemValue="Done" itemLabel="Done"/>
+                                    <f:ajax render="@form" listener="#{toDoView.reloadTodos}"/>
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <h:messages id="global_message"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col" style="margin-top:20px;">
+                    <ul class="list-group">
+                        <li class="list-group-item fw-light"><small>Session ID: #{toDoView.sessionId}</small></li>
+                        <li class="list-group-item fw-light"><small>Server Host Name: #{toDoView.hostName}</small></li>
+                        <li class="list-group-item fw-light"><small>Server IP: #{toDoView.ipAddress}</small></li>
+                        <li class="list-group-item fw-light"><small>Client IP: #{toDoView.clientIpAddress}</small></li>
+                    </ul>
+                </div>
+            </div>
+
+        </h:form>
+    </div>
+</h:body>
+</html>
