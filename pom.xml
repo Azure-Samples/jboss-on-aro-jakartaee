@@ -41,43 +41,69 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.wildfly.plugins</groupId>
+                    <artifactId>wildfly-jar-maven-plugin</artifactId>
+                    <version>${version.wildfly-jar.maven.plugin}</version>
+                    <configuration>
+                        <feature-packs>
+                            <feature-pack>
+                                <groupId>org.jboss.eap</groupId>
+                                <artifactId>wildfly-galleon-pack</artifactId>
+                                <version>${version.server.bootable-jar}</version>
+                            </feature-pack>
+                            <feature-pack>
+                                <groupId>org.jboss.eap</groupId>
+                                <artifactId>eap-datasources-galleon-pack</artifactId>
+                                <version>${version.eap-datasources-galleon-pack}</version>
+                            </feature-pack>
+                        </feature-packs>
+                        <layers>
+                            <layer>cloud-server</layer>
+                            <layer>web-clustering</layer>
+                            <layer>microprofile-platform</layer>
+                            <layer>mssqlserver-datasource</layer>
+                            <layer>jsf</layer>
+                            <layer>ejb-lite</layer>
+                        </layers>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>package</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-jar-maven-plugin</artifactId>
-                <version>${version.wildfly-jar.maven.plugin}</version>
-                <configuration>
-                    <feature-packs>
-                        <feature-pack>
-                            <groupId>org.jboss.eap</groupId>
-                            <artifactId>wildfly-galleon-pack</artifactId>
-                            <version>${version.server.bootable-jar}</version>
-                        </feature-pack>
-                        <feature-pack>
-                            <groupId>org.jboss.eap</groupId>
-                            <artifactId>eap-datasources-galleon-pack</artifactId>
-                            <version>${version.eap-datasources-galleon-pack}</version>
-                        </feature-pack>
-                    </feature-packs>
-                    <layers>
-                        <layer>cloud-server</layer>
-                        <layer>web-clustering</layer>
-                        <layer>microprofile-platform</layer>
-                        <layer>mssqlserver-datasource</layer>
-                        <layer>jsf</layer>
-                        <layer>ejb-lite</layer>
-                    </layers>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>bootable-jar-openshift</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-jar-maven-plugin</artifactId>
+                        <configuration combine.children="append">
+                            <cloud/>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <pluginRepositories>
         <pluginRepository>

@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    description: A service that exposes the Microsoft SQL server port
+  labels:
+    app: mssql2019
+  name: mssqlserver
+spec:
+  ports:
+  - name: tcp
+    port: 1433
+    targetPort: 1433
+  selector:
+    name: mssqlserver
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    description: Defines how to deploy the database server
+  labels:
+    app: mssql2019
+  name: mssqlserver
+spec:
+  replicas: 1
+  selector:
+    name: mssqlserver
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: mssqlserver
+      name: mssqlserver
+    spec:
+      containers:
+      - env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: MSSQL_PID
+          value: "Express"
+        - name: SA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: db-password
+              name: mssqlserver-secret
+        image: mcr.microsoft.com/mssql/rhel/server:2019-latest
+        name: mssqlserver
+        ports:
+        - containerPort: 1433
+        volumeMounts:
+        - mountPath: /var/opt/mssql
+          name: mssql-data
+      volumes:
+      - name: mssql-data
+        persistentVolumeClaim:
+          claimName: mssqlserver-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: mssql2019
+  name: mssqlserver-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: managed-premium
+  resources:
+    requests:
+      storage: 1Gi
