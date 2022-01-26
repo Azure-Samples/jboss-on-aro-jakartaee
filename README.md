@@ -1,6 +1,6 @@
 # JBoss EAP on Azure Red Hat OpenShift example
 
-This project is a simple todo-list demo application used to walk you through the process of migrating a traditional Jakarta Faces / Jakarta Enterprise Beans / Jakarta Persistence application to a container orchestrator like Red Hat OpenShift running on Azure.
+This project is a simple todo-list demo application used to walk you through the process of migrating a traditional Jakarta Faces / Jakarta Enterprise Beans / Jakarta Persistence application to a container orchestrator such as Red Hat OpenShift running on Azure.
 
 ## Getting Started
 
@@ -69,7 +69,7 @@ Execute the following steps to deploy the Microsoft SQL Server and create the da
 1. Create an OpenShift Secret object that will hold the configuration relative to the database:
 
    ```bash
-    todo-list (bootable-jar-openshift) $ oc create secret generic mssqlserver-secret \
+    $ oc create secret generic mssqlserver-secret \
     --from-literal db-password=Passw0rd!
     secret/mssqlserver-secret created
     ```
@@ -77,7 +77,7 @@ Execute the following steps to deploy the Microsoft SQL Server and create the da
 2. Deploy the database server by executing the following:
 
     ```bash
-    todo-list (bootable-jar-openshift) $ oc apply -f ./deployment/msqlserver/mssqlserver.yaml
+    $ oc apply -f ./deployment/msqlserver/mssqlserver.yaml
     service/mssqlserver created
     deploymentconfig.apps.openshift.io/mssqlserver created
     persistentvolumeclaim/mssqlserver-pvc created
@@ -86,7 +86,7 @@ Execute the following steps to deploy the Microsoft SQL Server and create the da
 3. Monitor the status of the pods and wait until the database server is running:
 
     ```bash
-    todo-list (bootable-jar-openshift) $ oc get pods -w
+    $ oc get pods -w
     NAME                   READY   STATUS      RESTARTS   AGE
     mssqlserver-1-deploy   0/1     Completed   0          34s
     mssqlserver-1-gw7qw    1/1     Running     0          31s
@@ -95,7 +95,7 @@ Execute the following steps to deploy the Microsoft SQL Server and create the da
 4. Connect to the database pod and create the database `todos_db`:
 
     ```bash
-    todo-list (bootable-jar-openshift) $ oc rsh mssqlserver-1-gw7qw
+    $ oc rsh mssqlserver-1-gw7qw
     sh-4.4$ /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Passw0rd!'
     1> CREATE DATABASE todos_db
     2> GO
@@ -111,23 +111,23 @@ Execute the following steps to build and deploy this demo application on ARO by 
 1. Compile the demo application and create the Bootable JAR:
 
    ```bash
-   todo-list (bootable-jar-openshift) $ MSSQLSERVER_DRIVER_VERSION=7.4.1.jre11 \
+   $ MSSQLSERVER_DRIVER_VERSION=7.4.1.jre11 \
    mvn clean package -Pbootable-jar-openshift
    ```
    
 2. Execute the following commands to create an application image:
 
    ```bash
-   todo-list (bootable-jar-openshift) $ mkdir target/openshift && cp target/todo-list-bootable.jar target/openshift
-   todo-list (bootable-jar-openshift) $ oc import-image ubi8/openjdk-11 --from=registry.redhat.io/ubi8/openjdk-11 --confirm
-   todo-list (bootable-jar-openshift) $ oc new-build --strategy source --binary --image-stream openjdk-11 --name todo-list-app
-   todo-list (bootable-jar-openshift) $ oc start-build todo-list-app --from-dir target/openshift 
+   $ mkdir target/openshift && cp target/todo-list-bootable.jar target/openshift
+   $ oc import-image ubi8/openjdk-11 --from=registry.redhat.io/ubi8/openjdk-11 --confirm
+   $ oc new-build --strategy source --binary --image-stream openjdk-11 --name todo-list-app
+   $ oc start-build todo-list-app --from-dir target/openshift 
    ```
 
 3. Deploy the application and expose it:
 
    ```bash
-   todo-list (bootable-jar-openshift) $ oc new-app todo-list-app \
+   $ oc new-app todo-list-app \
    --env KUBERNETES_NAMESPACE=$(oc project -q) \
    --env MSSQLSERVER_PASSWORD=Passw0rd! \
    --env MSSQLSERVER_USER=sa \
@@ -141,13 +141,13 @@ Execute the following steps to build and deploy this demo application on ARO by 
 4. Expose the application through an OpenShift service:
 
    ```bash
-   todo-list (bootable-jar-openshift) $ oc expose svc/todo-list-app
+   $ oc expose svc/todo-list-app
    ```
 
 5. Get the public URL of the application:
 
    ```bash
-   todo-list (bootable-jar-openshift) $ echo "http://"$(oc get route todo-list-app --template='{{ .spec.host }}')
+   $ echo "http://"$(oc get route todo-list-app --template='{{ .spec.host }}')
    http://todo-list-app-eap-demo.apps.bry1besb.northeurope.aroapp.io
    ```
 
