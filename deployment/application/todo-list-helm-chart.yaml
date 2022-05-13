@@ -1,5 +1,5 @@
 build:
-  uri: https://github.com/Azure-Samples/open-liberty-on-aro.git
+  uri: https://github.com/Azure-Samples/jboss-on-aro-jakartaee.git
   ref: bootable-jar-openshift
   mode: bootable-jar
   env:
