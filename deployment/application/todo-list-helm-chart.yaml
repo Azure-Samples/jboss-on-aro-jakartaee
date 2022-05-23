@@ -17,32 +17,38 @@ deploy:
       valueFrom:
         fieldRef:
           fieldPath: metadata.namespace
-    - name: MSSQLSERVER_USER
+    - name: JGROUPS_CLUSTER_PASSWORD
       valueFrom:
         secretKeyRef:
-          key: db-user
-          name: mssqlserver-secret
-    - name: MSSQLSERVER_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          key: db-password
-          name: mssqlserver-secret
-    - name: MSSQLSERVER_DATABASE
-      valueFrom:
-        secretKeyRef:
-          key: db-name
-          name: mssqlserver-secret
+          key: app-cluster-password
+          name: todo-list-secret
     - name: MSSQLSERVER_JNDI
       valueFrom:
         secretKeyRef:
           key: app-ds-jndi
           name: todo-list-secret
     - name: MSSQLSERVER_HOST
-      value: $(MSSQLSERVER_SERVICE_HOST)
-    - name: MSSQLSERVER_PORT
-      value: $(MSSQLSERVER_SERVICE_PORT)
-    - name: JGROUPS_CLUSTER_PASSWORD
       valueFrom:
         secretKeyRef:
-          key: app-cluster-password
-          name: todo-list-secret
+          key: db-host
+          name: mssqlserver-secret
+    - name: MSSQLSERVER_DATABASE
+      valueFrom:
+        secretKeyRef:
+          key: db-name
+          name: mssqlserver-secret
+    - name: MSSQLSERVER_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: db-password
+          name: mssqlserver-secret
+    - name: MSSQLSERVER_PORT
+      valueFrom:
+        secretKeyRef:
+          key: db-port
+          name: mssqlserver-secret
+    - name: MSSQLSERVER_USER
+      valueFrom:
+        secretKeyRef:
+          key: db-user
+          name: mssqlserver-secret
