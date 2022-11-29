@@ -9,8 +9,8 @@
     <packaging>war</packaging>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -18,7 +18,7 @@
         <microprofile.microprofile-health-api>3.0</microprofile.microprofile-health-api>
 
         <version.server.bootable-jar>3.0.0.GA-redhat-00004</version.server.bootable-jar>
-        <version.wildfly-jar.maven.plugin>4.0.3.Final-redhat-00001</version.wildfly-jar.maven.plugin>
+        <version.wildfly-jar.maven.plugin>8.1.0.Final</version.wildfly-jar.maven.plugin>
         <version.eap-datasources-galleon-pack>7.4.0.GA-redhat-00003</version.eap-datasources-galleon-pack>
 
         <maven.redhat.repository.url>https://maven.repository.redhat.com/ga/</maven.redhat.repository.url>
@@ -42,6 +42,11 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+            </plugin>
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-jar-maven-plugin</artifactId>
