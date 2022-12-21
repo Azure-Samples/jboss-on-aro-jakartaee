@@ -2,6 +2,8 @@ build:
   uri: https://github.com/Azure-Samples/jboss-on-aro-jakartaee.git
   ref: bootable-jar-openshift
   mode: bootable-jar
+  bootableJar:
+    builderImage: registry.access.redhat.com/ubi8/openjdk-17:1.14
   env:
     - name: MAVEN_ARGS_APPEND
       value: -Pbootable-jar-openshift
